@@ -12,7 +12,8 @@ function reshuffleListener(){
         flippedCards = [];
         resetGame();
         randomizeGameCard(false);
-        title.style.display = 'none';
+        title.style.visibility='hidden'
+        
     })
 }
 
@@ -151,7 +152,7 @@ function chechAll(){
     const allMatched = gameCard.every(card => card.classList.contains('matched'));
 
     if(allMatched){
-        title.classList.add('visible');
+        title.style.visibility='visible';
         explodeConfetti();
     }
 }
