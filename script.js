@@ -121,6 +121,8 @@ function cardListeners(){
         card.addEventListener('click',() => {
             if (randomizingCards) return;
 
+            if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
             if (!isGameStarted){
                 startGameWithCard(card);
                 return;
@@ -131,7 +133,7 @@ function cardListeners(){
             card.classList.add('flipped');
             flippedCards.push(card);
 
-            if(flippedCards.length === 2){
+            if(flippedCards.length === 2 ){
                 checkMatch();
             }
         });
@@ -149,13 +151,13 @@ function chechAll(){
     const allMatched = gameCard.every(card => card.classList.contains('matched'));
 
     if(allMatched){
-        title.style.display = 'block';
+        title.classList.add('visible');
         explodeConfetti();
     }
 }
 function checkMatch(){
     const [firstCard, secondCard] = flippedCards;
-    if(secondCard.dataset.animal === firstCard.dataset.animal && secondCard != firstCard){
+    if(secondCard.dataset.animal === firstCard.dataset.animal && secondCard != firstCard ){
         firstCard.classList.add('matched');
         secondCard.classList.add('matched');
         flippedCards = [];
