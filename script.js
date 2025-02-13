@@ -16,6 +16,10 @@ function reshuffleListener(){
     })
 }
 
+function forceReflow(element) {
+    void element.offsetWidth; // Bu kod, DOM'u zorla yeniden çizer.
+}
+
 function shuffle(array){
     return array.sort(() => Math.random()- 0.5);
 }
@@ -26,13 +30,13 @@ function randomizeGameCard(showFlippedAnimation = true, setCardPositions = false
 
     gameCard.forEach((card, cardIndex) => {
         const row = Math.ceil((cardIndex + 1) / 5);
-
+        card.classList.remove('matched');
         if (setCardPositions) {
             card.style.top = `${(row - 1) * 130}px`;
             card.style.left = `${(cardIndex % 5) * 150}px`;
         }
         // card.style.zIndex = cardIndex + 1;
-        card.classList.remove('matched');
+       
         if (showFlippedAnimation) card.classList.add('flipped');
     });
 
@@ -55,6 +59,8 @@ setTimeout(()=>{
                 card.style.top = `${(row - 1) * 130}px`;
                 card.style.left = `${(cardIndex % 5) * 150}px`;
                 gameCards.appendChild(card);
+
+                forceReflow(card);
 
                 setTimeout(() => {
                     card.classList.remove('centered');
@@ -149,7 +155,7 @@ function chechAll(){
 }
 function checkMatch(){
     const [firstCard, secondCard] = flippedCards;
-    if(secondCard.dataset.animal === firstCard.dataset.animal){
+    if(secondCard.dataset.animal === firstCard.dataset.animal && secondCard != firstCard){
         firstCard.classList.add('matched');
         secondCard.classList.add('matched');
         flippedCards = [];
@@ -168,7 +174,7 @@ function checkMatch(){
             secondCard.classList.remove('flipped');
             flippedCards = [];
             resetGame();
-        },500);
+        },1000);
     }
 }
 
