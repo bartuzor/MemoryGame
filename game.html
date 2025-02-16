@@ -132,7 +132,7 @@
 
     .game{
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
     }
     .game .congrats{
       font-weight:bolder;
@@ -161,15 +161,37 @@
     }
     .game .btn:disabled{
       opacity:0.5;
+      cursor: default;
+      background-color: #f27922;
     }
-   
+   .col{
+    display: flex;
+  flex-direction: column; 
+  }
+  .col-2{
+    align-self:center
+  }
+  .col-2 .btn{
+    align-self:flex-start;
+    width: 50px;
+    margin-top: 0;
+    margin-left: 25px
+  }
+
+  .btn:hover{
+    background-color: #b2602a;
+    cursor: pointer;
+    transition: 0.5s ease;
+  }
+
     
   </style>
 </head>
 
 <body>
   <main class="game" id="game-screen">
-    <h3 class="congrats">TEBRİKLER!!</h3>
+    <div class="col">
+    <section class="title"><h3 class="congrats">TEBRİKLER!!</h3></section>
     <section class="game__cards">
 
       <div class="game__card " data-animal="dog">
@@ -1991,6 +2013,8 @@
 
     </section>
     <button class="btn" id="reshuffle">Reshuffle</button>
+  </div>
+  <div class="col-2"><button class="btn" id="hint"><i class="fa-solid fa-lightbulb"></i></button></div>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
 <script src="script.js"></script>

@@ -2,10 +2,38 @@ const gameCard = Array.from(document.querySelectorAll('.game__card'));
 const gameCards = document.querySelector('.game__cards')
 const title = document.querySelector('.congrats')
 const btnShuffle = document.querySelector('#reshuffle');
+const btnHint = document.querySelector('#hint')
 let targetCard = '';
 let flippedCards = [];
 let isGameStarted = false;
 let randomizingCards = true;
+let hintCount = 1;
+
+
+
+
+function hintListenner(){
+    btnHint.addEventListener('click',()=>{
+            btnHint.toggleAttribute('disabled');
+            btnShuffle.toggleAttribute('disabled');
+            hintCount--;
+            
+            if(hintCount>0){
+            setTimeout(()=>{
+                btnHint.toggleAttribute('disabled');
+                btnShuffle.toggleAttribute('disabled');
+            },1000);}
+            
+            gameCard.forEach(card=>{
+                card.classList.add('flipped');
+                setTimeout(()=>{
+                    card.classList.remove('flipped');
+                    
+                },1000);
+            })
+        
+    })}
+
 
 function reshuffleListener(){
     btnShuffle.addEventListener('click',()=>{
@@ -28,6 +56,7 @@ function shuffle(array){
 function randomizeGameCard(showFlippedAnimation = true, setCardPositions = false){
     randomizingCards = true;
     btnShuffle.toggleAttribute('disabled');
+    btnHint.toggleAttribute('disabled');
 
     gameCard.forEach((card, cardIndex) => {
         const row = Math.ceil((cardIndex + 1) / 5);
@@ -72,6 +101,7 @@ setTimeout(()=>{
 
             setTimeout(() => {
                 btnShuffle.toggleAttribute('disabled');
+                btnHint.toggleAttribute('disabled');
                 randomizingCards = false;
             }, totalCardAnimationTime / 3)
         }, 3000);
@@ -190,6 +220,8 @@ function initializeGame(){
     randomizeGameCard(true, true);
     cardListeners();
     reshuffleListener();
+    hintListenner();
+    
 }
 
 initializeGame();
