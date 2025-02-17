@@ -2,17 +2,69 @@ const gameCard = Array.from(document.querySelectorAll('.game__card'));
 const gameCards = document.querySelector('.game__cards')
 const title = document.querySelector('.congrats')
 const btnShuffle = document.querySelector('#reshuffle');
+const btnHint = document.querySelector('#hint');
+const btnStart = document.getElementById('start-game');
+
 let targetCard = '';
 let flippedCards = [];
 let isGameStarted = false;
 let randomizingCards = true;
+let hintCount = 1;
+let animation = 0;
+let rounds = 0;
+let playerName = "";
+
+
+function startListenner(){
+    btnStart.addEventListener('click',()=>{
+        playerName = document.getElementById('player').value.trim();
+        if(playerName=== ''){        
+            alert('Please enter a name to start.');
+            }
+        else{
+            document.getElementById('welcome').classList.add('hidden');
+
+            document.querySelector('.game').style.filter = 'brightness(100%)';
+        }
+           
+        
+    })
+}
+
+
+function hintListenner(){
+    btnHint.addEventListener('click',()=>{
+            btnHint.toggleAttribute('disabled');
+            btnShuffle.toggleAttribute('disabled');
+            hintCount--;
+            
+            if(hintCount>0){
+            setTimeout(()=>{
+                btnHint.toggleAttribute('disabled');
+                btnShuffle.toggleAttribute('disabled');
+            },1000);}
+            
+            gameCard.forEach(card=>{
+                card.classList.add('flipped');
+                setTimeout(()=>{
+                    if(!card.classList.contains('matched'))
+                    {
+                    card.classList.remove('flipped');
+                    }
+                    
+                },1000);
+            })
+        
+    })}
+
 
 function reshuffleListener(){
     btnShuffle.addEventListener('click',()=>{
         flippedCards = [];
         resetGame();
         randomizeGameCard(false);
-        title.style.display = 'none';
+        title.style.visibility='hidden';
+        
     })
 }
 
@@ -24,9 +76,12 @@ function shuffle(array){
     return array.sort(() => Math.random()- 0.5);
 }
 
+
+
 function randomizeGameCard(showFlippedAnimation = true, setCardPositions = false){
     randomizingCards = true;
     btnShuffle.toggleAttribute('disabled');
+    btnHint.toggleAttribute('disabled');
 
     gameCard.forEach((card, cardIndex) => {
         const row = Math.ceil((cardIndex + 1) / 5);
@@ -40,46 +95,45 @@ function randomizeGameCard(showFlippedAnimation = true, setCardPositions = false
         if (showFlippedAnimation) card.classList.add('flipped');
     });
 
-setTimeout(()=>{
-    gameCard.forEach(card=>{
-        card.classList.remove('flipped');
-    })
-
-    setTimeout(() => {
-        gameCard.forEach((card) => {
-            card.classList.add('centered');
-        })
-
-        setTimeout(() => {
-            const shuffledPieces = shuffle(gameCard);
-            let totalCardAnimationTime = 0;
-            shuffledPieces.forEach((card, cardIndex) => {
-                card.classList.add('centered');
-                const row = Math.ceil((cardIndex + 1) / 5);
-                card.style.top = `${(row - 1) * 130}px`;
-                card.style.left = `${(cardIndex % 5) * 150}px`;
-                gameCards.appendChild(card);
-
-                forceReflow(card);
-
-                setTimeout(() => {
-                    card.classList.remove('centered');
-                }, 100 * cardIndex)
-
-                totalCardAnimationTime += 50 * cardIndex;
-            });
-
+        setTimeout(()=>{
+            gameCard.forEach(card=>{
+                card.classList.remove('flipped');
+            })
+        
             setTimeout(() => {
-                btnShuffle.toggleAttribute('disabled');
-                randomizingCards = false;
-            }, totalCardAnimationTime / 3)
-        }, 3000);
-    }, 500);
-},showFlippedAnimation ? 1000 : 0)
-
+                gameCard.forEach((card) => {
+                    card.classList.add('centered');
+                })
+        
+                setTimeout(() => {
+                    const shuffledPieces = shuffle(gameCard);
+                    let totalCardAnimationTime = 0;
+                    shuffledPieces.forEach((card, cardIndex) => {
+                        card.classList.add('centered');
+                        const row = Math.ceil((cardIndex + 1) / 5);
+                        card.style.top = `${(row - 1) * 130}px`;
+                        card.style.left = `${(cardIndex % 5) * 150}px`;
+                        gameCards.appendChild(card);
+        
+                        forceReflow(card);
+        
+                        setTimeout(() => {
+                            card.classList.remove('centered');
+                        }, 100 * cardIndex)
+        
+                        totalCardAnimationTime += 50 * cardIndex;
+                    });
+        
+                    setTimeout(() => {
+                        btnShuffle.toggleAttribute('disabled');
+                        btnHint.toggleAttribute('disabled');
+                        randomizingCards = false;
+                    }, totalCardAnimationTime / 3)
+                }, 3000);
+            }, 500);
+        },showFlippedAnimation ? 1000 : 0)
+    }
     
-}
-
 
 function explodeConfetti(){
     const duration = 5 * 1000,
@@ -147,12 +201,38 @@ function startGameWithCard(card){
     flippedCards.push(card);
     
 }
+
+function saveRounds(){
+    let scores = JSON.parse(localStorage.getItem('scores')) || [];
+
+    scores.push({ name:playerName,rounds: rounds});
+
+    localStorage.setItem('scores',JSON.stringify(scores));
+    console.log("🎯 Skor kaydedildi: ", scores);
+    updateScoreboard();
+}
+
+function updateScoreboard(){
+    let scores = JSON.parse(localStorage.getItem('scores')) || [];
+    let scoreList = document.getElementById('score-list');
+
+    scoreList.innerHTML="";
+
+    scores.forEach(score =>{
+        let row = document.createElement('tr');
+        row.innerHTML = `<td>${score.name}</td><td>${score.rounds}</td>`;
+        scoreList.appendChild(row);
+    });
+    console.log(" Skorboad kaydedildi");
+}
+
 function chechAll(){
     const allMatched = gameCard.every(card => card.classList.contains('matched'));
 
     if(allMatched){
-        title.classList.add('visible');
+        title.style.visibility='visible';
         explodeConfetti();
+        saveRounds();
     }
 }
 function checkMatch(){
@@ -176,6 +256,8 @@ function checkMatch(){
             secondCard.classList.remove('flipped');
             flippedCards = [];
             resetGame();
+            rounds++;
+            document.getElementById('wrongs').innerText = "Rounds : "+ rounds;
         },1000);
     }
 }
@@ -186,9 +268,13 @@ function resetGame(){
 }
 
 function initializeGame(){
-    randomizeGameCard(true, true);
+    startListenner();
+    randomizeGameCard(true,true);
     cardListeners();
     reshuffleListener();
+    hintListenner();
+    updateScoreboard();
+    
 }
 
 initializeGame();

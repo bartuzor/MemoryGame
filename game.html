@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Acme&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>Game</title>
   <style>
     @keyframes matchedAnimation {
@@ -43,6 +44,23 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      filter: brightness(50%);
+      transition: filter 0.5s ease-in-out;
+    }
+    .welcome{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width:450px;
+      height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      background-color: #2f4274;
+      border-radius: 10px;
+      border: 1px solid black;
     }
 
     .game__cards {
@@ -131,7 +149,7 @@
 
     .game{
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
     }
     .game .congrats{
       font-weight:bolder;
@@ -142,9 +160,7 @@
       text-align: center;
       justify-content: space-between;
       align-items: center;
-      opacity: 0;
-      transform: scale(0.8);
-      transition: opacitiy 1s ease, transform 1s ease;
+      visibility:hidden;
     }
 
     .game .congrats.visible{
@@ -156,20 +172,107 @@
       background-color: #f27922;
       border-radius: 7px;
       height: 35px;
+      width: 100px;
+      align-self: center;
       margin-top: 50px;
     }
     .game .btn:disabled{
       opacity:0.5;
+      cursor: default;
+      background-color: #f27922;
     }
+   .col{
+    display: flex;
+  flex-direction: column; 
+  }
+  .col-2{
+    align-self:center
+  }
+  .col-2 .btn{
+    align-self:flex-start;
+    width: 50px;
+    margin-top: 0;
+    margin-left: 25px
+  }
+
+  .btn:hover{
+    background-color: #b2602a;
+    cursor: pointer;
+    transition: 0.5s ease;
+  }
+  .intro{
+    text-align: center;
+    color: white;
+  }
+
+  .nameInput{
+    border-radius: 7px;
+    height: 35px;
+
+  }
+  .nameArea{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .nameArea .btn{
+    background-color: #f27922;
+    color: white;
+    border-radius: 7px;
+    width: 100px;
+    height: 35px;
+  }
+  .nameArea .btn:hover{
+    background-color: #b2602a;
+    cursor: pointer;
+    transition: 0.5s ease;
+  }
+  
+  .hidden{
+    opacity: 0;
+    visibility: hidden;
+    transition: opacitiy 0.5s ease visibility 0.5s ease;
+  }
+  .wrongs{
+    color: white;
+  }
+  .col-3{
+    display: flex;
+    flex-direction: row;
     
+    
+  }
+  
+  .row{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+  }
+  
+
+#score-list{
+  height: 100px;
+}
   </style>
 </head>
 
 <body>
+  <div class="welcome" id="welcome">
+    <div class="welcome-content">
+      <h3 class="intro">Welcome To The Worlds Best Puzzle Game !</h3>
+      <div class="nameArea">
+      <input class="nameInput" type="text" id="player" placeholder="Name"/>
+      <button class="btn" id="start-game">Start!</button>
+    </div>
+    </div>
+  </div> 
 
   <main class="game" id="game-screen">
-    
-    <h3 class="congrats">TEBRİKLER!!</h3>
+    <div class="row">
+      <div class="col-2"><button class="btn" id="hint"><i class="fa-solid fa-lightbulb"></i></button></div>
+    <div class="col">
+    <section class="title"><h3 class="congrats">TEBRİKLER!!</h3>
+    <h3 class="wrongs" id="wrongs"></h3></section>
     <section class="game__cards">
 
       <div class="game__card " data-animal="dog">
@@ -1991,16 +2094,24 @@
 
     </section>
     <button class="btn" id="reshuffle">Reshuffle</button>
+  </div>
+
+  <div class="col-3">
+    <table class="score-table">
+      <thead>
+        <tr class="table-row">
+          <th>Player</th>
+          <th>Rounds</th>
+        </tr>
+      </thead>
+      <tbody id="score-list"></tbody>
+    </table>
+  </div>
+</div>
   </main>
+
   <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
 <script src="script.js"></script>
 </body>
 
 </html>
-
-
-
-
-
-
-
