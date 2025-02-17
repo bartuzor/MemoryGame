@@ -82,6 +82,7 @@ function randomizeGameCard(showFlippedAnimation = true, setCardPositions = false
     randomizingCards = true;
     btnShuffle.toggleAttribute('disabled');
     btnHint.toggleAttribute('disabled');
+    btnHint.toggleAttribute('disabled');
 
     gameCard.forEach((card, cardIndex) => {
         const row = Math.ceil((cardIndex + 1) / 5);
@@ -230,6 +231,7 @@ function chechAll(){
     const allMatched = gameCard.every(card => card.classList.contains('matched'));
 
     if(allMatched){
+        title.style.visibility='visible';
         title.style.visibility='visible';
         explodeConfetti();
         saveRounds();
