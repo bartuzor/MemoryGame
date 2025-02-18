@@ -82,7 +82,7 @@ function randomizeGameCard(showFlippedAnimation = true, setCardPositions = false
     randomizingCards = true;
     btnShuffle.toggleAttribute('disabled');
     btnHint.toggleAttribute('disabled');
-    btnHint.toggleAttribute('disabled');
+    
 
     gameCard.forEach((card, cardIndex) => {
         const row = Math.ceil((cardIndex + 1) / 5);
@@ -207,6 +207,8 @@ function saveRounds(){
     let scores = JSON.parse(localStorage.getItem('scores')) || [];
 
     scores.push({ name:playerName,rounds: rounds});
+    
+    scores.sort((a,b) => a.rounds-b.rounds);
 
     localStorage.setItem('scores',JSON.stringify(scores));
     console.log("🎯 Skor kaydedildi: ", scores);
@@ -215,16 +217,17 @@ function saveRounds(){
 
 function updateScoreboard(){
     let scores = JSON.parse(localStorage.getItem('scores')) || [];
-    let scoreList = document.getElementById('score-list');
+    let scoreList = document.getElementById('scores');
 
     scoreList.innerHTML="";
 
     scores.forEach(score =>{
-        let row = document.createElement('tr');
-        row.innerHTML = `<td>${score.name}</td><td>${score.rounds}</td>`;
+        let row = document.createElement('div');
+        row.classList.add('scoreboard-row');
+        row.innerHTML = `<h3>${score.name}</h3><h3>${score.rounds}</h3>`;
         scoreList.appendChild(row);
     });
-    console.log(" Skorboad kaydedildi");
+    console.log(" Skorboard kaydedildi");
 }
 
 function chechAll(){
@@ -271,11 +274,11 @@ function resetGame(){
 
 function initializeGame(){
     startListenner();
-    randomizeGameCard(true,true);
     cardListeners();
     reshuffleListener();
     hintListenner();
     updateScoreboard();
+    randomizeGameCard(true,true);
     
 }
 

@@ -246,18 +246,36 @@
     display: flex;
     flex-direction: row;
     
-    
   }
   
   .row{
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    display: flex;
+    gap: 50px;
+    justify-content: space-between;
   }
   
 
-#score-list{
-  height: 100px;
-}
+  .scoreboard .header{
+    background-color: gray;
+    color: white;
+  }
+  .scoreboard-row{
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    margin: 0;
+  }
+  .scoreboard-row h3{
+    margin: 0;
+  }
+  .scores{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+  }
+
+
+
   </style>
 </head>
 
@@ -274,7 +292,7 @@
 
   <main class="game" id="game-screen">
     <div class="row">
-      <div class="col-2"><button class="btn" id="hint"><i class="fa-solid fa-lightbulb"></i></button></div>
+    <div class="col-2"><button class="btn" id="hint"><i class="fa-solid fa-lightbulb"></i></button></div>
     <div class="col">
     <section class="title"><h3 class="congrats">TEBRİKLER!!</h3>
     <h3 class="wrongs" id="wrongs"></h3></section>
@@ -2102,15 +2120,17 @@
   </div>
 
   <div class="col-3">
-    <table class="score-table">
-      <thead>
-        <tr class="table-row">
-          <th>Player</th>
-          <th>Rounds</th>
-        </tr>
-      </thead>
-      <tbody id="score-list"></tbody>
-    </table>
+    <div class="scoreboard">
+      <div class="header">
+        <div class="scoreboard-row">
+          <h3>Player</h3>
+          <h3>Rounds</h3>
+        </div>
+      </div>
+      <div class="scores" id="scores">
+       
+      </div>
+    </div>
   </div>
 </div>
   </main>
