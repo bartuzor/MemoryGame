@@ -304,8 +304,15 @@
     opacity: 0.5;
     cursor: default;
   }
+  .wrongs-row{
+    display: flex;
+    flex-direction: row;
+    color: white;
+  }
+  .title{
+    transition: transform 0.5s;
+  }
   
-
   
   </style>
 </head>
@@ -325,8 +332,12 @@
     <div class="row">
     <div class="col-2"><button class="btn" id="hint"><i class="fa-solid fa-lightbulb"></i></button></div>
     <div class="col">
-    <section class="title"><h3 class="congrats">TEBRİKLER!!</h3>
-    <h3 class="wrongs" id="wrongs"></h3></section>
+    <section class="title" id="title"><h3 class="congrats">TEBRİKLER!!</h3>
+      <div class="wrongs-row">
+        <h3>Rounds:</h3>
+        <h3 class="wrongs" id="wrongs"></h3>
+      </div>
+    </section>
     <section class="game__cards">
 
       <div class="game__card " data-animal="dog">

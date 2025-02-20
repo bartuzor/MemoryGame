@@ -9,12 +9,13 @@ let targetCard = '';
 let flippedCards = [];
 let isGameStarted = false;
 let randomizingCards = true;
-let hintCount = 2;
+let hintCount = 500;
 let animation = 0;
 let rounds = 0;
 let playerName = "";
 let hintState=true;
 let shuffleState=true;
+let startState = false;
 let animationFinish = false;
 
 
@@ -28,17 +29,15 @@ function startListenner(){
         else{
             document.getElementById('welcome').classList.add('hidden');
             isGameStarted=true;
+            startState = true;
             cardListeners();
             
-            btnHint.toggleAttribute('disabled');
-            btnShuffle.toggleAttribute('disabled');
+            
             hintState = true;
             shuffleState = true;
             document.querySelector('.game').style.filter = 'brightness(100%)';
         }
-           
-        
-    })
+    });
 }
 
 
@@ -51,7 +50,10 @@ function hintListenner(){
             setTimeout(()=>{
                 btnHint.toggleAttribute('disabled');
                 btnShuffle.toggleAttribute('disabled');
-                
+                hintCount--;
+                if(hintCount<1){
+                btnHint.toggleAttribute('disabled');
+                hintState = false;}
             },1000);
             
             gameCard.forEach(card=>{
@@ -64,11 +66,7 @@ function hintListenner(){
                     
                 },1000);
             })
-            hintCount--;
-            setTimeout(()=>{if(hintCount<1){
-                btnHint.toggleAttribute('disabled');
-                hintState = false;
-            }},1000)
+            
             
     })}
 
@@ -81,10 +79,9 @@ function reshuffleListener(){
         resetGame();
         randomizeGameCard(false);
         title.style.visibility='hidden';
-        setTimeout(()=>{
-            if(hintState===true){
-        btnHint.toggleAttribute('disabled');}
-        btnShuffle.toggleAttribute('disabled');},6500)
+        rounds=0;
+        document.getElementById('wrongs').innerText="";     
+        
         
     })
 }
@@ -151,7 +148,8 @@ function randomizeGameCard(showFlippedAnimation = true, setCardPositions = false
                     });
         
                     setTimeout(() => {
-                        
+                        btnHint.toggleAttribute('disabled');
+                        btnShuffle.toggleAttribute('disabled');
                         randomizingCards = false;
                     }, totalCardAnimationTime / 3)
                 }, 3000);
@@ -263,7 +261,6 @@ function chechAll(){
 
     if(allMatched){
         title.style.visibility='visible';
-        title.style.visibility='visible';
         explodeConfetti();
         saveRounds();
     }
@@ -290,7 +287,7 @@ function checkMatch(){
             flippedCards = [];
             resetGame();
             rounds++;
-            document.getElementById('wrongs').innerText = "Rounds : "+ rounds;
+            document.getElementById('wrongs').innerText=rounds;
         },1000);
     }
 }
