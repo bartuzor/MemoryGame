@@ -9,10 +9,14 @@ let targetCard = '';
 let flippedCards = [];
 let isGameStarted = false;
 let randomizingCards = true;
-let hintCount = 1;
+let hintCount = 2;
 let animation = 0;
 let rounds = 0;
 let playerName = "";
+let hintState=true;
+let shuffleState=true;
+let animationFinish = false;
+
 
 
 function startListenner(){
@@ -23,7 +27,13 @@ function startListenner(){
             }
         else{
             document.getElementById('welcome').classList.add('hidden');
-
+            isGameStarted=true;
+            cardListeners();
+            
+            btnHint.toggleAttribute('disabled');
+            btnShuffle.toggleAttribute('disabled');
+            hintState = true;
+            shuffleState = true;
             document.querySelector('.game').style.filter = 'brightness(100%)';
         }
            
@@ -34,15 +44,15 @@ function startListenner(){
 
 function hintListenner(){
     btnHint.addEventListener('click',()=>{
+        
             btnHint.toggleAttribute('disabled');
-            btnShuffle.toggleAttribute('disabled');
-            hintCount--;
+            btnShuffle.toggleAttribute('disabled');    
             
-            if(hintCount>0){
             setTimeout(()=>{
                 btnHint.toggleAttribute('disabled');
                 btnShuffle.toggleAttribute('disabled');
-            },1000);}
+                
+            },1000);
             
             gameCard.forEach(card=>{
                 card.classList.add('flipped');
@@ -54,8 +64,15 @@ function hintListenner(){
                     
                 },1000);
             })
-        
+            hintCount--;
+            setTimeout(()=>{if(hintCount<1){
+                btnHint.toggleAttribute('disabled');
+                hintState = false;
+            }},1000)
+            
     })}
+
+
 
 
 function reshuffleListener(){
@@ -64,6 +81,10 @@ function reshuffleListener(){
         resetGame();
         randomizeGameCard(false);
         title.style.visibility='hidden';
+        setTimeout(()=>{
+            if(hintState===true){
+        btnHint.toggleAttribute('disabled');}
+        btnShuffle.toggleAttribute('disabled');},6500)
         
     })
 }
@@ -80,8 +101,12 @@ function shuffle(array){
 
 function randomizeGameCard(showFlippedAnimation = true, setCardPositions = false){
     randomizingCards = true;
+    
+    
+
     btnShuffle.toggleAttribute('disabled');
-    btnHint.toggleAttribute('disabled');
+    if(hintState===true){
+    btnHint.toggleAttribute('disabled');}
     
 
     gameCard.forEach((card, cardIndex) => {
@@ -126,13 +151,13 @@ function randomizeGameCard(showFlippedAnimation = true, setCardPositions = false
                     });
         
                     setTimeout(() => {
-                        btnShuffle.toggleAttribute('disabled');
-                        btnHint.toggleAttribute('disabled');
+                        
                         randomizingCards = false;
                     }, totalCardAnimationTime / 3)
                 }, 3000);
             }, 500);
         },showFlippedAnimation ? 1000 : 0)
+        
     }
     
 
@@ -172,7 +197,11 @@ const interval = setInterval(function() {
 }
 
 function cardListeners(){
+    if(!isGameStarted) return;
     gameCard.forEach(card => {
+
+        card.style.cursor='pointer';
+
         card.addEventListener('click',() => {
             if (randomizingCards) return;
 
@@ -222,9 +251,8 @@ function updateScoreboard(){
     scoreList.innerHTML="";
 
     scores.forEach(score =>{
-        let row = document.createElement('div');
-        row.classList.add('scoreboard-row');
-        row.innerHTML = `<h3>${score.name}</h3><h3>${score.rounds}</h3>`;
+        let row = document.createElement('tr');
+        row.innerHTML = `<td>${score.name}</td><td>${score.rounds}</td>`;
         scoreList.appendChild(row);
     });
     console.log(" Skorboard kaydedildi");
@@ -273,12 +301,12 @@ function resetGame(){
 }
 
 function initializeGame(){
+    randomizeGameCard(true,true);
     startListenner();
-    cardListeners();
     reshuffleListener();
     hintListenner();
     updateScoreboard();
-    randomizeGameCard(true,true);
+    
     
 }
 

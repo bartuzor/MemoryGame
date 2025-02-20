@@ -87,6 +87,7 @@
       perspective: 700px;
       border-radius:8px;
       transition: all 1s linear;
+      cursor: default;
     }
 
     .game__card.matched{
@@ -254,16 +255,17 @@
     justify-content: space-between;
   }
   
-
+  
   .scoreboard .header{
     background-color: gray;
     color: white;
+    border-radius: 10px;
   }
   .scoreboard-row{
     display: flex;
     flex-direction: row;
-    gap: 25px;
     margin: 0;
+    width: 130px;
   }
   .scoreboard-row h3{
     margin: 0;
@@ -273,9 +275,38 @@
     flex-direction: column;
     background-color: white;
   }
+  td,th{
+    text-align: center;
+    width: 65px;
+    height: 25px;
+  }
+  .scoreboard{
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 0.5px solid black;
+    height: 25px;
+  }
+  .scoreboard thead tr:first-child th:first-child{
+    border-top-left-radius: 10px;
+  }
+  .scoreboard  thead tr:first-child th:last-child{
+    border-top-right-radius: 10px;
+  }
+  .scoreboard  thead tr:last-child th:first-child{
+    border-bottom-left-radius: 10px;
+  }
+  .scoreboard  thead tr:last-child th:last-child{
+    border-bottom-right-radius: 10px;
+  }
+  .game__card:disabled{
+    opacity: 0.5;
+    cursor: default;
+  }
+  
 
-
-
+  
   </style>
 </head>
 
@@ -2120,17 +2151,17 @@
   </div>
 
   <div class="col-3">
-    <div class="scoreboard">
-      <div class="header">
-        <div class="scoreboard-row">
-          <h3>Player</h3>
-          <h3>Rounds</h3>
-        </div>
-      </div>
-      <div class="scores" id="scores">
+    <table class="scoreboard">
+      <thead class="header">
+        <tr class="scoreboard-row">
+          <th>Player</th>
+          <th>Rounds</th>
+        </tr>
+      </thead>
+      <tbody class="scores" id="scores">
        
-      </div>
-    </div>
+      </tbody>
+    </table>
   </div>
 </div>
   </main>
