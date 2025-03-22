@@ -17,6 +17,9 @@ let hintState=true;
 let shuffleState=true;
 let startState = false;
 let animationFinish = false;
+let cardFlipSound = new Audio('sounds/cardFlip.wav');
+let confettiSound = new Audio('sounds/confetti-pop-sound.mp3');
+let winSound = new Audio('sounds/win.mp3');
 
 
 
@@ -43,7 +46,7 @@ function startListenner(){
 
 function hintListenner(){
     btnHint.addEventListener('click',()=>{
-        
+            flippedCards =[];
             btnHint.toggleAttribute('disabled');
             btnShuffle.toggleAttribute('disabled');    
             
@@ -201,6 +204,7 @@ function cardListeners(){
         card.style.cursor='pointer';
 
         card.addEventListener('click',() => {
+            cardFlipSound.play();
             if (randomizingCards) return;
 
             if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
@@ -214,6 +218,7 @@ function cardListeners(){
         
             card.classList.add('flipped');
             flippedCards.push(card);
+            
 
             if(flippedCards.length === 2 ){
                 checkMatch();
@@ -261,6 +266,7 @@ function chechAll(){
 
     if(allMatched){
         title.style.visibility='visible';
+        winSound.play();
         explodeConfetti();
         saveRounds();
     }
@@ -273,6 +279,7 @@ function checkMatch(){
         flippedCards = [];
         targetCard = null;
         isGameStarted = false;
+        confettiSound.play();
         confetti({
             particleCount: 100,
             spread: 10,
@@ -282,6 +289,7 @@ function checkMatch(){
     }
     else{
         setTimeout(()=>{
+            cardFlipSound.play();
             firstCard.classList.remove('flipped');
             secondCard.classList.remove('flipped');
             flippedCards = [];
